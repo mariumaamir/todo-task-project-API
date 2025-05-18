@@ -1,0 +1,9 @@
+{
+   "scripts": {
+  "dev": "node --watch ./server.js"
+   
+   },
+  "dependencies": {
+    "node": "^20.19.2"
+  }
+}
