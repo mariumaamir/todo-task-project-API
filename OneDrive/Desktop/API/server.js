@@ -17,125 +17,287 @@
 //   console.log("The server is at this port", PORT);
 // });
 
-const tasks = require("./tasks.js");
+// const tasks = require("./tasks.js");
+// const { v4: uuidv4 } = require("uuid");
+// const fs = require("fs");
+// const fsPromises = require("fs").promises;
+// const express = require("express");
 
-const express = require("express");
-const todoApp = express();
-const PORT = 5500;
+// const filePath = "tasks.json";
+// const todoApp = express();
+// const PORT = 5500;
 
-todoApp.use(express.json());
-todoApp.get("/tasks", (req, res) => {
-  res.json(tasks);
-});
+// todoApp.use(express.json());
 
-todoApp.post("/tasks", (req, res) => {
-  const newTask = req.body;
+// ensureFileExists();
+// let tasks = loadTasksFromFile();
+// todoApp.get("/tasks", (req, res) => {
+//   res.json(tasks);
+// });
 
-  const validation = validateTask(newTask, tasks);
-  if (!validation.valid) {
-    return res.status(400).json({ error: validation.error });
-  }
+// todoApp.post("/tasks", (req, res) => {
+//   const newTask = req.body;
 
-  if (newTask.completed === undefined) {
-    newTask.completed = false;
-  }
+//   const validation = validateTask(newTask, tasks);
+//   if (!validation.valid) {
+//     return res.status(400).json({ error: validation.error });
+//   }
 
-  newTask.id = Date.now();
-  tasks.push(newTask);
+//   if (newTask.completed === undefined) {
+//     newTask.completed = false;
+//   }
 
-  res.status(201).json(newTask);
-});
+//   newTask.id = uuidv4();
 
-todoApp.delete("/tasks/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const findIndex = tasks.findIndex((task) => task.id === id);
+//   tasks.push(newTask);
+//   saveTasksToFile(tasks);
+//   res.status(201).json(newTask);
+//   console.log(`✅ Task Added → ID: ${newTask.id}, Title: "${newTask.title}", Completed: ${newTask.completed}`);
 
-  if (findIndex === -1) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-  const deletedTask = tasks.splice(findIndex, 1)[0];
 
-  res.json({ message: "Task deleted", task: deletedTask });
-});
+// });
 
-todoApp.put("/tasks/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const task = tasks.find((t) => t.id === id);
+// todoApp.delete("/tasks/:id", (req, res) => {
+//   const id = req.params.id;
+//   const findIndex = tasks.findIndex((task) => task.id === id);
 
+//   if (findIndex === -1) {
+//     return res.status(404).json({ error: "Task not found" });
+//   }
+//   const deletedTask = tasks.splice(findIndex, 1)[0];
+//   saveTasksToFile(tasks);  
+//   res.json({ message: "Task deleted", task: deletedTask });
+//  console.log(`🗑️ Task Deleted → ID: ${deletedTask.id}, Title: "${deletedTask.title}"`);
+
+
+// });
+
+// todoApp.put("/tasks/:id", (req, res) => {
+//   const id = req.params.id;
+//   const task = tasks.find((t) => t.id === id);
+
+//   if (!task) {
+//     return res.status(404).json({ error: "Task not found" });
+//   }
+
+//   const updatedTask = {
+//     title: req.body.title !== undefined ? req.body.title : task.title,
+//     completed:
+//       req.body.completed !== undefined ? req.body.completed : task.completed,
+//   };
+
+//   const validation = validateTask(updatedTask, tasks, id);
+//   if (!validation.valid) {
+//     return res.status(400).json({ error: validation.error });
+//   }
+
+//   task.title = updatedTask.title;
+//   task.completed = updatedTask.completed;
+//     saveTasksToFile(tasks);
+
+//   res.json({ message: "Task updated", task });
+// console.log(`✏️ Task Updated → ID: ${task.id}, New Title: "${task.title}", Completed: ${task.completed}`);
+
+
+// });
+
+// todoApp.listen(PORT, () => {
+//   console.log("Server is running on ", PORT);
+// });
+
+// function validateTask(taskData, existingTasks, taskIdToIgnore = null) {
+//   // Check title exists
+//   if (taskData.title === undefined) {
+//     return { valid: false, error: "Title is required" };
+//   }
+
+//   // Check title type string
+//   if (typeof taskData.title !== "string") {
+//     return { valid: false, error: "Title must be a string" };
+//   }
+
+//   // Check title non-empty
+//   if (taskData.title.trim() === "") {
+//     return { valid: false, error: "Title cannot be empty" };
+//   }
+
+//   // Check title format
+//   if (!isValidTitle(taskData.title)) {
+//     return {
+//       valid: false,
+//       error: "Title must only contain letters and spaces",
+//     };
+//   }
+
+//   // Check duplicate title
+//   if (isDuplicateTitle(taskData.title, existingTasks, taskIdToIgnore)) {
+//     return { valid: false, error: "Duplicate title not allowed" };
+//   }
+
+
+//   if (
+//     taskData.completed !== undefined &&
+//     typeof taskData.completed !== "boolean"
+//   ) {
+//     return { valid: false, error: "Completed must be true or false" };
+//   }
+
+//   return { valid: true };
+// }
+
+
+// function isDuplicateTitle(title, tasks, currentTaskId = null) {
+//   const lowerTitle = title.trim().toLowerCase();
+//   return tasks.some(
+//     (task) =>
+//       task.title.trim().toLowerCase() === lowerTitle &&
+//       task.id !== currentTaskId
+//   );
+// }
+
+
+
+// function ensureFileExists() {
+//   if (!fs.existsSync(filePath)) {
+//     fs.writeFileSync(filePath, "[]");
+//     console.log(`${filePath} was missing and has been created.`);
+//   }
+
+//   const content = fs.readFileSync(filePath, "utf8").trim();
+//   if (content === "") {
+//     fs.writeFileSync(filePath, "[]");
+//     console.log(`${filePath} was empty.`);
+//   }
+// }
+
+// ensureFileExists();
+
+// function loadTasksFromFile() {
+//   try {
+//     ensureFileExists();
+//     const data = fs.readFileSync(filePath, "utf8");
+//     const tasks = JSON.parse(data);
+
+  
+
+//     return tasks;
+//   } catch (error) {
+//     console.error("Error loading tasks:", error);
+//     return [];
+//   }
+// }
+
+// function saveTasksToFile(tasks) {
+//   if (!Array.isArray(tasks)) {
+//     console.error("saveTasksToFile expected an array but got:", typeof tasks);
+//     return;
+//   }
+
+//   try {
+//     fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2));
+//   } catch (error) {
+//     console.error("Error saving tasks:", error);
+//   }
+// }
+
+
+
+
+
+// function isValidTitle(title) {
+//   const onlyLettersAndSpaces = /^[A-Za-z\s]+$/;
+//   return onlyLettersAndSpaces.test(title.trim());
+// }
+
+
+
+
+const { v4: uuidv4 } = require("uuid");
+
+const {
+  ensureFileExists,
+  loadTasksFromFile,
+  saveTasksToFile,
+} = require("./fileHandler");
+const { validateTask } = require("./validator");
+
+
+function setupRoutes(app) {
+  ensureFileExists();
+  let tasks = loadTasksFromFile();
+
+ app.get("/tasks/:id", (req, res) => {
+  const id = req.params.id;
+
+  const task = tasks.find(t => t.id === id);
+  
   if (!task) {
     return res.status(404).json({ error: "Task not found" });
   }
-
-  const updatedTask = {
-    title: req.body.title !== undefined ? req.body.title : task.title,
-    completed:
-      req.body.completed !== undefined ? req.body.completed : task.completed,
-  };
-
-  const validation = validateTask(updatedTask, tasks, id);
-  if (!validation.valid) {
-    return res.status(400).json({ error: validation.error });
-  }
-
-  task.title = updatedTask.title;
-  task.completed = updatedTask.completed;
-
-  res.json({ message: "Task updated", task });
+  
+  res.json(task);
 });
 
-todoApp.listen(PORT, () => {
-  console.log("Server is running on ", PORT);
-});
+  app.post("/tasks", (req, res) => {
+    const newTask = req.body;
 
-function validateTask(task, tasks, currentTaskId = null) {
-  // Check title exists
-  if (task.title === undefined) {
-    return { valid: false, error: "Title is required" };
-  }
+    const validation = validateTask(newTask, tasks);
+    if (!validation.valid) {
+      return res.status(400).json({ error: validation.error });
+    }
 
-  // Check title type string
-  if (typeof task.title !== "string") {
-    return { valid: false, error: "Title must be a string" };
-  }
+    if (newTask.completed === undefined) {
+      newTask.completed = false;
+    }
 
-  // Check title non-empty
-  if (task.title.trim() === "") {
-    return { valid: false, error: "Title cannot be empty" };
-  }
+    newTask.id = uuidv4();
 
-  // Check title format
-  if (!isValidTitle(task.title)) {
-    return {
-      valid: false,
-      error: "Title must only contain letters and spaces",
+    tasks.push(newTask);
+    saveTasksToFile(tasks);
+
+    res.status(201).json(newTask);
+    console.log(`✅ Task Added → ID: ${newTask.id}, Title: "${newTask.title}", Completed: ${newTask.completed}`);
+  });
+
+  app.delete("/tasks/:id", (req, res) => {
+    const id = req.params.id;
+    const findIndex = tasks.findIndex((task) => task.id === id);
+
+    if (findIndex === -1) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    const deletedTask = tasks.splice(findIndex, 1)[0];
+    saveTasksToFile(tasks);
+    res.json({ message: "Task deleted", task: deletedTask });
+    console.log(`🗑️  Task Deleted → ID: ${deletedTask.id}, Title: "${deletedTask.title}"`);
+  });
+
+  app.put("/tasks/:id", (req, res) => {
+    const id = req.params.id;
+    const task = tasks.find((t) => t.id === id);
+
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    const updatedTask = {
+      title: req.body.title !== undefined ? req.body.title : task.title,
+      completed: req.body.completed !== undefined ? req.body.completed : task.completed,
     };
-  }
 
-  // Check duplicate title
-  if (isDuplicateTitle(task.title, tasks, currentTaskId)) {
-    return { valid: false, error: "Duplicate title not allowed" };
-  }
+    const validation = validateTask(updatedTask, tasks, id);
+    if (!validation.valid) {
+      return res.status(400).json({ error: validation.error });
+    }
 
-  // Check completed field only if defined
-  if (task.completed !== undefined && typeof task.completed !== "boolean") {
-    return { valid: false, error: "Completed must be true or false" };
-  }
+    task.title = updatedTask.title;
+    task.completed = updatedTask.completed;
 
+    saveTasksToFile(tasks);
 
-
-  return { valid: true };
+    res.json({ message: "Task updated", task });
+    console.log(`✏️ Task Updated → ID: ${task.id}, New Title: "${task.title}", Completed: ${task.completed}`);
+  });
 }
 
-function isDuplicateTitle(title, tasks, currentTaskId = null) {
-  const lowerTitle = title.trim().toLowerCase();
-  return tasks.some(
-    (task) =>
-      task.title.trim().toLowerCase() === lowerTitle &&
-      task.id !== currentTaskId
-  );
-}
-
-function isValidTitle(title) {
-  const onlyLettersAndSpaces = /^[A-Za-z\s]+$/;
-  return onlyLettersAndSpaces.test(title.trim());
-}
+module.exports = setupRoutes;
